@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Pubblicitario GLO</title>
+    <!-- Includi Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        #banner {
+            position: relative;
+            width: 300px;
+            height: 600px;
+            background-image: url('images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        #clicktag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .hotspot {
+            position: absolute;
+            width: 60px;
+            height: 60px;            
+            cursor: pointer;
+            z-index: 2;
+        }
+        #popup-container {
+            display: none; /* Nascondi inizialmente */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+	    opacity: 0; /* Inizialmente invisibile */
+            transition: opacity 0.5s ease; /* Transizione per la dissolvenza */
+            display: none; /* Nascondi inizialmente */
+        }
+
+	#popup-container.show {
+   		 display: flex; /* Mostra il contenitore */
+    		 opacity: 1; /* Mostra il popup */
+	}
+	#popup-container.hide {
+   		 opacity: 0; /* Nascondi il popup */
+	}
+
+        #popup {
+            width: 250px;
+            height: 300px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #closeBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .bottom-button {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 2;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Ombreggiatura */
+            transition: box-shadow 0.3s ease; /* Transizione per l'ombreggiatura */
+        }
+        #button1 {
+            bottom: 70px;
+            background-color: #ffffff;
+            color: black;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center; /* Centra il contenuto orizzontalmente */
+            text-decoration: none;
+        }
+
+        .bottom-button img {
+            margin-left: 6px; /* Margine per distanziare l'immagine dal testo */
+            vertical-align: middle;
+        }
+        #button2 {
+            bottom: 20px;
+            background-color: #ff5614;
+            font-weight: 600;
+            justify-content: center; /* Centra il contenuto orizzontalmente */
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="banner">
+        <div id="clicktag"></div>
+        <div id="popup-container">
+            <div id="popup" class="animate__animated">
+                <button id="closeBtn">&times;</button>
+                <p id="popupText"></p>
+            </div>
+        </div>
+        <a href="https://mywebar.com/p/Project_31_h4sx8irtka"><button id="button1" class="bottom-button">View in AR<img src="images/ar.gif" alt="AR"></button></a>
+        <a href="https://www.discoverglo.com/it/it/discover-glo/hyper-pro"><button id="button2" class="bottom-button">Scopri di più</button></a>
+    </div>
+
+    <script>
+        var clickTAGvalue = 'https://www.example.com'; // Sostituisci con l'URL desiderato
+
+        const hotspots = [
+    { id: 1, x: 100, y: 100, text: "Innovativa tecnologia di riscaldamento" },
+    { id: 2, x: 170, y: 270, text: "Design elegante e moderno" },
+    { id: 3, x: 188, y: 324, text: "Vasta gamma di aromi disponibili" },
+    { id: 4, x: 110, y: 373, text: "Batteria a lunga durata" },
+    { id: 5, x: 186, y: 159, text: "Facile da usare e mantenere" }
+];
+
+const banner = document.getElementById('banner');
+const popupContainer = document.getElementById('popup-container');
+const popup = document.getElementById('popup');
+const popupText = document.getElementById('popupText');
+const closeBtn = document.getElementById('closeBtn');
+const clicktag = document.getElementById('clicktag');
+
+const svgNamespace = "http://www.w3.org/2000/svg";
+
+hotspots.forEach(hotspot => {
+    const hotspotElement = document.createElementNS(svgNamespace, "svg");
+    hotspotElement.setAttribute("xmlns", svgNamespace);
+    hotspotElement.setAttribute("viewBox", "0 0 40 40"); // Aumentata la viewBox
+    hotspotElement.classList.add('hotspot');
+    hotspotElement.style.left = `${hotspot.x - 30}px`; // Compensa l'aumento delle dimensioni
+    hotspotElement.style.top = `${hotspot.y - 30}px`;  // Compensa l'aumento delle dimensioni
+
+    const innerCircle = document.createElementNS(svgNamespace, "circle");
+    innerCircle.setAttribute("cx", "20"); // Centro adattato alla viewBox aumentata
+    innerCircle.setAttribute("cy", "20"); // Centro adattato alla viewBox aumentata
+    innerCircle.setAttribute("r", "5"); // Raggio aumentato
+    innerCircle.setAttribute("fill", "yellow");
+
+    const outerCircle = document.createElementNS(svgNamespace, "circle");
+    outerCircle.setAttribute("cx", "20"); // Centro adattato alla viewBox aumentata
+    outerCircle.setAttribute("cy", "20"); // Centro adattato alla viewBox aumentata
+    outerCircle.setAttribute("r", "5"); // Raggio iniziale aumentato
+    outerCircle.setAttribute("fill", "none");
+    outerCircle.setAttribute("stroke", "yellow");
+    outerCircle.setAttribute("stroke-width", "3"); // Spessore aumentato
+
+    const animateRadius = document.createElementNS(svgNamespace, "animate");
+    animateRadius.setAttribute("attributeName", "r");
+    animateRadius.setAttribute("from", "3"); // Raggio iniziale aumentato
+    animateRadius.setAttribute("to", "10"); // Raggio finale aumentato
+    animateRadius.setAttribute("dur", "1.5s");
+    animateRadius.setAttribute("repeatCount", "indefinite");
+
+    const animateOpacity = document.createElementNS(svgNamespace, "animate");
+    animateOpacity.setAttribute("attributeName", "opacity");
+    animateOpacity.setAttribute("from", "1");
+    animateOpacity.setAttribute("to", "0");
+    animateOpacity.setAttribute("dur", "1.5s");
+    animateOpacity.setAttribute("repeatCount", "indefinite");
+
+    outerCircle.appendChild(animateRadius);
+    outerCircle.appendChild(animateOpacity);
+
+    hotspotElement.appendChild(innerCircle);
+    hotspotElement.appendChild(outerCircle);
+
+    hotspotElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showPopup(hotspot.text);
+    });
+
+    banner.appendChild(hotspotElement);
+});
+        function showPopup(text) {
+            popupText.textContent = text;
+            popupContainer.style.display = 'flex';
+	    popupContainer.classList.remove('hide'); // Rimuovi la classe di uscita se presente
+            popupContainer.classList.add('show'); // Aggiungi la classe di entrata
+            popup.classList.remove('animate__bounceOut'); // Rimuovi la classe di uscita se presente
+            popup.classList.add('animate__bounceIn'); // Aggiungi la classe di entrata
+        }
+
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+	    popupContainer.classList.remove('show'); // Rimuovi la classe di entrata
+   	    popupContainer.classList.add('hide'); // Aggiungi la classe di uscita
+            popup.classList.remove('animate__bounceIn'); // Rimuovi la classe di entrata
+            popup.classList.add('animate__bounceOut'); // Aggiungi la classe di uscita
+            setTimeout(() => {
+                popupContainer.style.display = 'none';
+            }, 750); // Durata dell'animazione di uscita (in millisecondi)
+        });
+
+        clicktag.addEventListener('click', function(){
+            window.open(clickTAGvalue, '_blank');
+        });
+
+        // Previeni la propagazione del click per i bottoni blu
+        document.getElementById('button1').addEventListener('click', (e) => e.stopPropagation());
+        document.getElementById('button2').addEventListener('click', (e) => e.stopPropagation());
+    </script>
+</body>
+</html>
+
